@@ -69,14 +69,14 @@ export default {
   computed: {
     pathStyle() {
       return {
-        stroke: 'rgb(255, 136, 85)',
+        stroke: 'rgb(0, 0, 0)',
         strokeWidth: 2.73205,
         fill: 'none',
       }
     },
     arrowStyle() {
       return {
-        stroke: 'rgb(255, 136, 85)',
+        stroke: 'rgb(0, 0, 0)',
         strokeWidth: 5.73205,
         fill: 'none',
       }
@@ -87,7 +87,7 @@ export default {
       return `translate(${arrowX}, ${arrowY}) rotate(${degree})`;
     },
     dAttr() {
-      let cx = this.start[0], cy = this.start[1], ex = this.end[0], ey = this.end[1];
+      let cx = this.end[0], cy = this.end[1], ex = this.start[0], ey = this.start[1];
       let x1 = cx, y1 = cy + 50, x2 = ex, y2 = ey - 50;
       return `M ${cx}, ${cy} C ${x1}, ${y1}, ${x2}, ${y2}, ${ex}, ${ey}`;
     }

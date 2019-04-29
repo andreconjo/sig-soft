@@ -3,16 +3,19 @@
     @mousedown="handleMousedown"
     @mouseover="handleMouseOver"
     @mouseleave="handleMouseLeave"
-    v-bind:class="{selected: options.selected === id}">
-    <div class="node-port node-input"
+    @dblclick="handleDblClick"
+    @keypress.enter="handleEnter"
+    v-bind:class="`${handleTypeImage(type)}`">
+    <div class="node-port node-output"
        @mousedown="inputMouseDown"
        @mouseup="inputMouseUp">
     </div>
     <div class="node-main">
       <div v-text="type" class="node-type"></div>
-      <div v-text="label" class="node-label"></div>
+      <div v-show="!isEditing" class="node-label">{{label}}</div>
+      <input ref="editLabel" v-show="isEditing" type="text" v-model="localLabel"/>
     </div>
-    <div class="node-port node-output" 
+    <div class="node-port node-input" 
       @mousedown="outputMouseDown">
     </div>
     <div v-show="show.delete" class="node-delete">&times;</div>
@@ -67,10 +70,14 @@ export default {
     return {
       show: {
         delete: false,
-      }
+      },
+      isEditing: false,
+      localLabel: ''
     }
   },
+  
   mounted() {
+    
   },
   computed: {
     nodeStyle() {
@@ -82,6 +89,11 @@ export default {
     }
   },
   methods: {
+
+    handleEnter() {
+      this.isEditing = false;
+      this.saveLabelChange()
+    },
     handleMousedown(e) {
       const target = e.target || e.srcElement;
       // console.log(target);
@@ -107,30 +119,69 @@ export default {
       this.$emit('linkingStop')
       e.preventDefault();
     },
+    handleDblClick(e) {
+      this.isEditing = true
+      this.localLabel = this.label
+      this.$refs.editLabel.focus();
+      e.preventDefault()
+    },
+    handleTypeImage(type) {
+      if (type == 'softgoal') 
+        return 'flowchart-softgoal'
+      
+      if (type == 'claim') 
+        return 'flowchart-claim'
+      
+
+      return 'flowchart-default'
+    },
+    saveLabelChange() {
+      this.$emit('changeLabel', this.id, this.localLabel)
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-$themeColor: rgb(255, 136, 85);
+$themeColor: rgb(116, 77, 60);
 $portSize: 12;
 
+.flowchart-default {
+  background-image: url('../assets/images/action.png');
+}
+
+.flowchart-softgoal {
+  background-image: url('../assets/images/softgoal.png');
+}
+
+.flowchart-claim {
+  background-image: url('../assets/images/claim.png');
+}
+
 .flowchart-node {
+  
   margin: 0;
-  width: 80px;
+  width: 120px;
   height: 80px;
   position: absolute;
   box-sizing: border-box;
   border: none;
-  background: white;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
   z-index: 1;
   opacity: .9;
   cursor: move;
+  display: flex;
+    justify-content: center;
+    align-items: center;
   transform-origin: top left;
+  
   .node-main {
-    text-align: center;
+    
     .node-type {
+      display: none;
       background: $themeColor;
       color: white;
       font-size: 13px;

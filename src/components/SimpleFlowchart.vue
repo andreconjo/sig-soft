@@ -16,7 +16,8 @@
       :options="nodeOptions"
       @linkingStart="linkingStart(node.id)"
       @linkingStop="linkingStop(node.id)"
-      @nodeSelected="nodeSelected(node.id, $event)">
+      @nodeSelected="nodeSelected(node.id, $event)"
+      @changeLabel="changeNodeLabel">
     </flowchart-node>
   </div>
 </template>
@@ -89,10 +90,10 @@ export default {
         let x, y, cy, cx, ex, ey;
         x = this.scene.centerX + fromNode.x;
         y = this.scene.centerY + fromNode.y;
-        [cx, cy] = this.getPortPosition('bottom', x, y);
+        [cx, cy] = this.getPortPosition('top', x, y);
         x = this.scene.centerX + toNode.x;
         y = this.scene.centerY + toNode.y;
-        [ex, ey] = this.getPortPosition('top', x, y);
+        [ex, ey] = this.getPortPosition('bottom', x, y);
         return { 
           start: [cx, cy], 
           end: [ex, ey],
@@ -104,7 +105,7 @@ export default {
         const fromNode = this.findNodeWithID(this.draggingLink.from)
         x = this.scene.centerX + fromNode.x;
         y = this.scene.centerY + fromNode.y;
-        [cx, cy] = this.getPortPosition('bottom', x, y);
+        [cx, cy] = this.getPortPosition('top', x, y);
         // push temp dragging link, mouse cursor postion = link end postion 
         lines.push({ 
           start: [cx, cy], 
@@ -120,6 +121,9 @@ export default {
     // console.log(22222, this.rootDivOffset);
   },
   methods: {
+    changeNodeLabel(id, label) {
+      this.findNodeWithID(id).label = label;
+    },
     findNodeWithID(id) {
       return this.scene.nodes.find((item) => {
           return id === item.id
@@ -127,10 +131,10 @@ export default {
     },
     getPortPosition(type, x, y) {
       if (type === 'top') {
-        return [x + 40, y];
+        return [x + 60, y];
       }
       else if (type === 'bottom') {
-        return [x + 40, y + 80];
+        return [x + 60, y + 80];
       }
     },
     linkingStart(index) {
@@ -263,7 +267,7 @@ export default {
 <style scoped lang="scss">
 .flowchart-container {
   margin: 0;
-  background: #ddd;
+  background: #ecf1f2;
   position: relative;
   overflow: hidden;
   svg {
