@@ -5,24 +5,33 @@
     @mouseleave="handleMouseLeave"
     @dblclick="handleDblClick"
     @keypress.enter="handleEnter"
-    v-bind:class="`${handleTypeImage(type)}`">
+    v-bind:class="`${handleTypeImage(type)} ${satisfact ? 's' : ''}`"
+    >
     <div class="node-port node-output"
        @mousedown="inputMouseDown"
        @mouseup="inputMouseUp">
     </div>
-    <div class="node-main">
+    <div v-show="!showContext" class="node-main">
       <div v-text="type" class="node-type"></div>
       <div v-show="!isEditing" class="node-label">{{label}}</div>
+      <div v-show="topic" class="node-label">[{{topic}}]</div>
       <input ref="editLabel" v-show="isEditing" type="text" v-model="localLabel"/>
     </div>
     <div class="node-port node-input" 
       @mousedown="outputMouseDown">
     </div>
     <div v-show="show.delete" class="node-delete">&times;</div>
+    
+    <div style="position: relative">
+      <contextbox v-if="showContext" :satifactProp="satisfact" :topicProp="topic" :priorityProp="priority" :mouseEvent="mouseEvent" @setAttributes="setNodeAttributes"/>
+    </div>
   </div>
 </template>
 
 <script>
+
+import contextbox from './click/contextbox.vue'
+
 export default {
   name: 'FlowchartNode',
   props: {
@@ -55,6 +64,19 @@ export default {
       type: String,
       default: 'input name'
     },
+    priority: {
+      type: Boolean,
+      default: false
+    },
+    topic: {
+      type: String,
+      default: ''
+      
+    },
+    satisfact: {
+      type: String,
+      default: ''
+    },
     options: {
       type: Object,
       default() {
@@ -66,8 +88,13 @@ export default {
       }
     }
   },
+  components: {
+    contextbox
+  }, 
   data() {
     return {
+      mouseEvent: null,
+      showContext: false,
       show: {
         delete: false,
       },
@@ -77,7 +104,6 @@ export default {
   },
   
   mounted() {
-    
   },
   computed: {
     nodeStyle() {
@@ -91,24 +117,47 @@ export default {
   methods: {
 
     handleEnter() {
+           if(this.showContext)
+        return
       this.isEditing = false;
       this.saveLabelChange()
     },
     handleMousedown(e) {
       const target = e.target || e.srcElement;
       // console.log(target);
+      if(e.button === 2) {
+        this.showContext = !this.showContext;
+        e.preventDefault();
+        
+        this.mouseEvent = {
+          pageX:  e.pageX + 200,
+          pageY: e.pageY  + 300
+        }
+        
+        return;
+      }
+
+           if(this.showContext)
+        return
+      
       if (target.className.indexOf('node-input') < 0 && target.className.indexOf('node-output') < 0) {
         this.$emit('nodeSelected', e);
       }
       e.preventDefault();
     },
     handleMouseOver() {
+           if(this.showContext)
+        return
       this.show.delete = true;
     },
     handleMouseLeave() {
+           if(this.showContext)
+        return
       this.show.delete = false;
     },
     outputMouseDown(e) {
+      
+      
       this.$emit('linkingStart')
       e.preventDefault();
     },
@@ -120,10 +169,15 @@ export default {
       e.preventDefault();
     },
     handleDblClick(e) {
+      if(this.showContext)
+        return
       this.isEditing = true
       this.localLabel = this.label
       this.$refs.editLabel.focus();
       e.preventDefault()
+    },
+    s() {
+      
     },
     handleTypeImage(type) {
       if (type == 'softgoal') 
@@ -137,6 +191,10 @@ export default {
     },
     saveLabelChange() {
       this.$emit('changeLabel', this.id, this.localLabel)
+    },
+    setNodeAttributes(property) {
+      property["id"] = this.id
+      this.$emit('setProperty', property)
     }
   }
 }
@@ -232,5 +290,9 @@ $portSize: 12;
 }
 .selected {
   box-shadow: 0 0 0 2px $themeColor;
+}
+
+.s {
+  background: black;
 }
 </style>

@@ -2,7 +2,9 @@
   <div class="flowchart-container" 
     @mousemove="handleMove" 
     @mouseup="handleUp"
-    @mousedown="handleDown">
+    @mousedown="handleDown"
+    oncontextmenu="return false">
+    
     <svg width="100%" :height="`${height}px`">
       <flowchart-link v-bind.sync="link" 
         v-for="(link, index) in lines" 
@@ -17,7 +19,9 @@
       @linkingStart="linkingStart(node.id)"
       @linkingStop="linkingStop(node.id)"
       @nodeSelected="nodeSelected(node.id, $event)"
-      @changeLabel="changeNodeLabel">
+      @changeLabel="changeNodeLabel"
+      @setProperty="setNodeProperty"
+      >
     </flowchart-node>
   </div>
 </template>
@@ -70,7 +74,7 @@ export default {
   },
   components: {
     FlowchartLink,
-    FlowchartNode,
+    FlowchartNode
   },
   computed: {
     nodeOptions() {
@@ -231,6 +235,7 @@ export default {
     },
     handleDown(e) {
       const target = e.target || e.srcElement;
+
       // console.log('for scroll', target, e.keyCode, e.which)
       if ((target === this.$el || target.matches('svg, svg *')) && e.which === 1) {
         this.action.scrolling = true;
@@ -238,6 +243,7 @@ export default {
         this.action.selected = null; // deselectAll
       }
       this.$emit('canvasClick', e);
+      
     },
     moveSelectedNode(dx, dy) {
       let index = this.scene.nodes.findIndex((item) => {
@@ -258,6 +264,13 @@ export default {
         return link.from !== id && link.to !== id
       })
       this.$emit('nodeDelete', id)
+    },
+    setNodeProperty(property) {
+      // this[property.property] = property.value
+      // console.log(this.satisfact)
+      let myNode = this.findNodeWithID(property.id)
+      myNode[property.property] = property.value
+      console.log(myNode, property)
     }
   },
 }

@@ -18,9 +18,8 @@
       @linkAdded="linkAdded"
       @canvasClick="canvasClick"
       :height="800"/>
+
   </div>
-
-
 </template>
 
 <script>
@@ -46,6 +45,9 @@ export default {
             y: 80,
             type: 'action',
             label: 'Autenticação',
+            priority: false,
+            topic: '',
+            satisfact: ''
           },
           {
             id: 4,
@@ -53,6 +55,9 @@ export default {
             y: -80,          
             type: 'softgoal',
             label: 'Segurança',
+            priority: false,
+            topic: '',
+            satisfact: ''
           },
           {
             id: 6,
@@ -60,6 +65,9 @@ export default {
             y: 80,
             type: 'Rule',
             label: 'PIN',
+            priority: false,
+            topic: '',
+            satisfact: ''
           }
         ],
         links: [
@@ -98,6 +106,9 @@ export default {
         // type: this.nodeCategory[this.newNodeType],
         type: type,
         label: this.newNodeLabel ? this.newNodeLabel: `${type}`,
+        priority: false,
+        topic: '',
+        satisfact: ''
       })
     },
     nodeClick(id) {
