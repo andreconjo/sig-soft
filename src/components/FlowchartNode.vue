@@ -5,12 +5,14 @@
     @mouseleave="handleMouseLeave"
     @dblclick="handleDblClick"
     @keypress.enter="handleEnter"
-    v-bind:class="`${handleTypeImage(type)} ${satisfact ? 's' : ''}`"
+    v-bind:class="`${handleTypeImage(type)}`"
     >
     <div class="node-port node-output"
        @mousedown="inputMouseDown"
        @mouseup="inputMouseUp">
     </div>
+    
+    <div v-show="satisfact" v-bind:class="`${handleSafisfact()}`"></div>
     <div v-show="!showContext" class="node-main">
       <div v-text="type" class="node-type"></div>
       <div v-show="!isEditing" class="node-label">{{label}}</div>
@@ -176,8 +178,21 @@ export default {
       this.$refs.editLabel.focus();
       e.preventDefault()
     },
-    s() {
-      
+    handleSafisfact() {
+      switch(this.satisfact) {
+        case 'Denied':
+          return 'icon denied'
+        case 'Weakly Denied':
+          return 'icon weakly-denied'
+        case 'Weakly Satisficed':
+          return 'icon weakly-satisficed'
+        case 'Satisficed':
+          return 'icon satisficed'
+        case 'Conflict':
+          return 'icon conflict'
+      }
+        
+        
     },
     handleTypeImage(type) {
       if (type == 'softgoal') 
@@ -292,7 +307,33 @@ $portSize: 12;
   box-shadow: 0 0 0 2px $themeColor;
 }
 
-.s {
-  background: black;
+.icon {
+    background-size: 14px 14px;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    position: absolute;
+    margin-left: 60px;
+    margin-top: -10px;
+
+    &.denied{
+      background-image: url('../assets/images/denied.png');
+    }
+
+    &.weakly-denied{
+      background-image: url('../assets/images/weakly-denied.png');
+    }
+
+    &.weakly-satisficed{
+      background-image: url('../assets/images/weakly-satisficed.png');
+    }
+
+    &.satisficed{
+      background-image: url('../assets/images/satisficed.png');
+    }
+
+    &.conflict{
+      background-image: url('../assets/images/conflict.png');
+    }
 }
 </style>
