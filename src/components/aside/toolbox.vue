@@ -34,7 +34,17 @@ export default {
                     name: "claim",
                     image: require("../../assets/images/claim.png"),
                     type: "claim"
-                }
+                },
+                {
+                    name: "esquerda",
+                    image: require("../../assets/images/seta-esquerda.png"),
+                    type: "arrow-or"
+                },
+                {
+                    name: "direita",
+                    image: require("../../assets/images/seta-direita.png"),
+                    type: "arrow-and"
+                },
             ]
         }
     },
@@ -43,6 +53,7 @@ export default {
         addNode(node) {
             this.$emit('addNodeToolbox', node.type)
         }
+
     }
 }
 </script>

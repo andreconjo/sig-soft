@@ -17,7 +17,8 @@
       @linkBreak="linkBreak"
       @linkAdded="linkAdded"
       @canvasClick="canvasClick"
-      :height="800"/>
+      :height="800"
+      :arrowType="arrowType"/>
 
   </div>
 </template>
@@ -34,6 +35,7 @@ export default {
   },
   data() {
     return {
+      arrowType: '',
       scene: {
         centerX: 1024,
         centerY: 140,
@@ -63,7 +65,7 @@ export default {
             id: 6,
             x: -390,
             y: 80,
-            type: 'Rule',
+            type: 'action',
             label: 'PIN',
             priority: false,
             topic: '',
@@ -74,7 +76,8 @@ export default {
           {
             id: 3,
             from: 2, // node id the link start
-            to: 4,  // node id the link end
+            to: 4,
+              // node id the link end
           },
           {
             id: 6,
@@ -95,21 +98,25 @@ export default {
       //console.log('canvas Click, event:', e)
     },
     addNode(type) {
-      console.log('addNode')
-      let maxID = Math.max(0, ...this.scene.nodes.map((link) => {
-        return link.id
-      }))
-      this.scene.nodes.push({
-        id: maxID + 1,
-        x: -1000,
-        y: -100,
-        // type: this.nodeCategory[this.newNodeType],
-        type: type,
-        label: this.newNodeLabel ? this.newNodeLabel: `${type}`,
-        priority: false,
-        topic: '',
-        satisfact: ''
-      })
+      console.log(type)
+      if(type === 'arrow-or' || type === 'arrow-and')
+        this.arrowType = type;
+      else {
+        let maxID = Math.max(0, ...this.scene.nodes.map((link) => {
+          return link.id
+        }))
+        this.scene.nodes.push({
+          id: maxID + 1,
+          x: -1000,
+          y: -100,
+          // type: this.nodeCategory[this.newNodeType],
+          type: type,
+          label: this.newNodeLabel ? this.newNodeLabel: `${type}`,
+          priority: false,
+          topic: '',
+          satisfact: ''
+        })
+      }
     },
     nodeClick(id) {
       console.log('node click', id);

@@ -18,6 +18,7 @@
 export default {
   name: 'FlowchartLink',
   props: {
+    type: '',
     // start point position [x, y]
     start: {
       type: Array,
@@ -36,9 +37,15 @@ export default {
   },
   data() {
     return {
+      myArrowType: '',
       show: {
         delete: false,
       }
+    }
+  },
+  watch: {
+    type: function() {
+      console.log("Watch: ", this.myArrowType, this.id, this.start, this.end)
     }
   },
   methods: {
@@ -66,10 +73,20 @@ export default {
       this.$emit('deleteLink')
     }
   },
+  mounted() {
+    this.myArrowType = this.type
+  },
   computed: {
     pathStyle() {
+      let color = 'rgb(0, 0, 0)';
+
+      if(this.myArrowType === 'arrow-or')
+        color = 'rgb(255, 0, 0)'
+      else if (this.myArrowType === 'arrow-and')
+        color = 'rgb(0, 255, 0)'
+      
       return {
-        stroke: 'rgb(0, 0, 0)',
+        stroke: color,
         strokeWidth: 2.73205,
         fill: 'none',
       }

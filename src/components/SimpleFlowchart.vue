@@ -9,6 +9,7 @@
       <flowchart-link v-bind.sync="link" 
         v-for="(link, index) in lines" 
         :key="`link${index}`"
+        :type="arrowType"
         @deleteLink="linkDelete(link.id)">
       </flowchart-link>
     </svg>
@@ -34,6 +35,7 @@ import { getMousePosition } from '../assets/utilty/position';
 export default {
   name: 'VueFlowchart',
   props: {
+    arrowType: '',
     scene: {
       type: Object,
       default() {
@@ -154,6 +156,7 @@ export default {
       if (this.draggingLink && this.draggingLink.from !== index) {
         // check link existence
         const existed = this.scene.links.find((link) => {
+          console.log(link)
           return link.from === this.draggingLink.from && link.to === index;
         })
         if (!existed) {
@@ -164,6 +167,7 @@ export default {
             id: maxID + 1,
             from: this.draggingLink.from,
             to: index,
+            type: this.arrowType
           };
           this.scene.links.push(newLink)
           this.$emit('linkAdded', newLink)

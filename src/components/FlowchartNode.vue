@@ -200,9 +200,12 @@ export default {
       
       if (type == 'claim') 
         return 'flowchart-claim'
+
+      if (type == 'action') 
+        return 'flowchart-default'
       
 
-      return 'flowchart-default'
+      return ''
     },
     saveLabelChange() {
       this.$emit('changeLabel', this.id, this.localLabel)
