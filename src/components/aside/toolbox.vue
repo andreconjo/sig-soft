@@ -36,12 +36,12 @@ export default {
                     type: "claim"
                 },
                 {
-                    name: "esquerda",
+                    name: "Or",
                     image: require("../../assets/images/seta-esquerda.png"),
                     type: "arrow-or"
                 },
                 {
-                    name: "direita",
+                    name: "And",
                     image: require("../../assets/images/seta-direita.png"),
                     type: "arrow-and"
                 },

@@ -76,13 +76,12 @@ export default {
           {
             id: 3,
             from: 2, // node id the link start
-            to: 4,
-              // node id the link end
+            to: 4, // node id the link end
           },
           {
             id: 6,
             from: 6, // node id the link start
-            to: 4,  // node id th
+            to: 4,  // node id the link end
           }
         ]
       },
@@ -129,6 +128,41 @@ export default {
     },
     linkAdded(link) {
       console.log('new link added:', link);
+    },
+    findNodeById(id) {
+      return this.scene.nodes.filter(node => node.id === id)[0];
+    },
+    findLinkByFromId(id) {
+      return this.scene.links.filter(link => link.from === id);
+    },
+    findLinkByToId(id) {
+      return this.scene.links.filter(link => link.to === id);
+    },
+    findNodesChildren(links) {
+       
+      return links.map(link => {
+        return this.findNodeById(link.from);
+      })
+    },
+    changeSatisfact(position){ 
+      this.scene.nodes.map(node => {
+          let links = this.findLinkByToId(node.id);
+          let children = this.findNodesChildren(this.findLinkByToId(node.id));
+
+          console.log('Nó de referencia:', node.id, '| Links:', links, "| filhos: ", children)
+
+
+      })
+    }
+  },
+  computed: {
+    selected() {
+      return this.scene.nodes.map(node => node.satisfact)
+    }
+  },
+  watch: {
+    selected() {
+      this.changeSatisfact()
     }
   }
 }
