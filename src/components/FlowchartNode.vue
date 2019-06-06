@@ -126,7 +126,6 @@ export default {
     },
     handleMousedown(e) {
       const target = e.target || e.srcElement;
-      // console.log(target);
       if(e.button === 2) {
         this.showContext = !this.showContext;
         e.preventDefault();

@@ -124,7 +124,6 @@ export default {
   mounted() {
     this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
     this.rootDivOffset.left = this.$el ? this.$el.offsetLeft : 0;
-    // console.log(22222, this.rootDivOffset);
   },
   methods: {
     changeNodeLabel(id, label) {
@@ -156,7 +155,6 @@ export default {
       if (this.draggingLink && this.draggingLink.from !== index) {
         // check link existence
         const existed = this.scene.links.find((link) => {
-          console.log(link)
           return link.from === this.draggingLink.from && link.to === index;
         })
         if (!existed) {
@@ -229,7 +227,6 @@ export default {
           this.draggingLink = null;
         }
         if (typeof target.className === 'string' && target.className.indexOf('node-delete') > -1) {
-          // console.log('delete2', this.action.dragging);
           this.nodeDelete(this.action.dragging);
         }
       }
@@ -270,11 +267,9 @@ export default {
       this.$emit('nodeDelete', id)
     },
     setNodeProperty(property) {
-      // this[property.property] = property.value
-      // console.log(this.satisfact)
       let myNode = this.findNodeWithID(property.id)
       myNode[property.property] = property.value
-      console.log(myNode, property)
+      this.$emit("callSuper")
     }
   },
 }

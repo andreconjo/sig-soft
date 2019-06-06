@@ -17,6 +17,7 @@
       @linkBreak="linkBreak"
       @linkAdded="linkAdded"
       @canvasClick="canvasClick"
+      @callSuper="changeSatisfact"
       :height="800"
       :arrowType="arrowType"/>
 
@@ -118,16 +119,16 @@ export default {
       }
     },
     nodeClick(id) {
-      console.log('node click', id);
+      //console.log('node click', id);
     },
     nodeDelete(id) {
-      console.log('node delete', id);
+      //console.log('node delete', id);
     },
     linkBreak(id) {
-      console.log('link break', id);
+      //console.log('link break', id);
     },
     linkAdded(link) {
-      console.log('new link added:', link);
+      //console.log('new link added:', link);
     },
     findNodeById(id) {
       return this.scene.nodes.filter(node => node.id === id)[0];
@@ -138,31 +139,65 @@ export default {
     findLinkByToId(id) {
       return this.scene.links.filter(link => link.to === id);
     },
-    findNodesChildren(links) {
-       
-      return links.map(link => {
-        return this.findNodeById(link.from);
-      })
+    getChildWithArrowAnd(fatherId) {
+      return this.findLinkByToId(fatherId).filter(link => link.type === 'arrow-and');
+    },
+    allIsSatisfact(fatherId){
+      let childs = [];
+      this.getChildWithArrowAnd(fatherId).map(link => {
+        childs.push(this.findNodeById(link.from))
+        
+      });
+
+      let checked = childs.filter(node => node.satisfact === 'Satisficed');
+
+      console.log('child',  childs.length)
+      console.log('process', checked.length)
+      return childs.length === checked.length
+    },
+    haveJustOneAnd(id) {
+      let childs = this.getChildWithArrowAnd(id);
+      return childs.length;
+      
     },
     changeSatisfact(position){ 
       this.scene.nodes.map(node => {
           let links = this.findLinkByToId(node.id);
-          let children = this.findNodesChildren(this.findLinkByToId(node.id));
+          //let children = this.findNodesChildren(this.findLinkByToId(node.id));
 
-          console.log('Nó de referencia:', node.id, '| Links:', links, "| filhos: ", children)
+          links.map(link => {
+            let childs = this.findNodeById(link.from);
+
+            if(link.type == "arrow-or") {
+              switch (childs.satisfact){
+                case "Satisficed":
+                  node.satisfact = "Satisficed"
+                  break;  
+
+                 case "Denied":
+                  node.satisfact = "Denied"
+                  break;  
+                }
+               
+            }
+
+            if(link.type == "arrow-and") {
+              if(this.haveJustOneAnd(node.id) === 1){
+                alert('Não é possivel realizar uma avaliação com apenas uma ligaçãdo do tipo AND');
+                return;
+              }else
+
+                if(this.allIsSatisfact(node.id)){
+                  node.satisfact = "Satisficed"                
+                }else {
+                  node.satisfact = "Denied"
+                }
+              }
+
+          })
 
 
       })
-    }
-  },
-  computed: {
-    selected() {
-      return this.scene.nodes.map(node => node.satisfact)
-    }
-  },
-  watch: {
-    selected() {
-      this.changeSatisfact()
     }
   }
 }

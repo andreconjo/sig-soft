@@ -45,7 +45,6 @@ export default {
   },
   watch: {
     type: function() {
-      console.log("Watch: ", this.myArrowType, this.id, this.start, this.end)
     }
   },
   methods: {
