@@ -45,6 +45,26 @@ export default {
                     image: require("../../assets/images/seta-direita.png"),
                     type: "arrow-and"
                 },
+                {
+                    name: "make",
+                    image: require("../../assets/images/make.png"),
+                    type: "arrow-make"
+                },
+                {
+                    name: "help",
+                    image: require("../../assets/images/help.png"),
+                    type: "arrow-help"
+                },
+                {
+                    name: "hurt",
+                    image: require("../../assets/images/hurt.png"),
+                    type: "arrow-hurt"
+                },
+                {
+                    name: "break",
+                    image: require("../../assets/images/break.png"),
+                    type: "arrow-break"
+                },
             ]
         }
     },

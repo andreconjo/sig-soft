@@ -99,7 +99,8 @@ export default {
     },
     addNode(type) {
       console.log(type)
-      if(type === 'arrow-or' || type === 'arrow-and')
+      if(type === 'arrow-or' || type === 'arrow-and' || type === 'arrow-make'
+      || type === 'arrow-help' || type === 'arrow-hurt' || type === 'arrow-break')
         this.arrowType = type;
       else {
         let maxID = Math.max(0, ...this.scene.nodes.map((link) => {

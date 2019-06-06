@@ -83,7 +83,15 @@ export default {
         color = 'rgb(255, 0, 0)'
       else if (this.myArrowType === 'arrow-and')
         color = 'rgb(0, 255, 0)'
-      
+      else if(this.myArrowType === 'arrow-make')
+        color = 'rgb(0, 200, 0)'
+      else if(this.myArrowType === 'arrow-help')
+        color = 'rgb(0, 150, 0)'
+      else if(this.myArrowType === 'arrow-hurt')
+        color = 'rgb(150, 0, 0)'
+      else if(this.myArrowType === 'arrow-break')
+        color = 'rgb(120, 0, 0)'
+
       return {
         stroke: color,
         strokeWidth: 2.73205,
