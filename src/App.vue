@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <h1> SIG Soft</h1>
+    <h1>SIG Soft</h1>
 
-  <aside class="aside aside-left">
-    <toolbox @addNodeToolbox="addNode"/>
-  </aside>
+    <aside class="aside aside-left">
+      <toolbox @addNodeToolbox="addNode"/>
+    </aside>
 
+    <aside class="aside aside-right">
+      <h1>Catálogo</h1>
+    </aside>
 
-  <aside  class="aside aside-right">
-    <h1>Catálogo</h1>
-  </aside>
-    
-    <simple-flowchart :scene.sync="scene" 
+    <simple-flowchart
+      :scene.sync="scene"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
@@ -19,8 +19,8 @@
       @canvasClick="canvasClick"
       @callSuper="changeSatisfact"
       :height="800"
-      :arrowType="arrowType"/>
-
+      :arrowType="arrowType"
+    />
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
           {
             id: 4,
             x: -580,
-            y: -80,          
+            y: -80,
             type: 'softgoal',
             label: 'Segurança',
             priority: false,
@@ -147,7 +147,7 @@ export default {
       let childs = [];
       this.getChildWithArrowAnd(fatherId).map(link => {
         childs.push(this.findNodeById(link.from))
-        
+
       });
 
       let checked = childs.filter(node => node.satisfact === 'Satisficed');
@@ -156,12 +156,23 @@ export default {
       console.log('process', checked.length)
       return childs.length === checked.length
     },
+    allHaveStatus(fatherId) {
+       let childs = [];
+      this.getChildWithArrowAnd(fatherId).map(link => {
+        childs.push(this.findNodeById(link.from))
+
+      });
+
+      let processed = childs.filter(node => node.satisfact !== '');
+
+      return (processed.length === childs.length);
+    },
     haveJustOneAnd(id) {
       let childs = this.getChildWithArrowAnd(id);
       return childs.length;
-      
+
     },
-    changeSatisfact(position){ 
+    changeSatisfact(position){
       this.scene.nodes.map(node => {
           let links = this.findLinkByToId(node.id);
           //let children = this.findNodesChildren(this.findLinkByToId(node.id));
@@ -173,27 +184,29 @@ export default {
               switch (childs.satisfact){
                 case "Satisficed":
                   node.satisfact = "Satisficed"
-                  break;  
+                  break;
 
                  case "Denied":
                   node.satisfact = "Denied"
-                  break;  
+                  break;
                 }
-               
+
             }
 
             if(link.type == "arrow-and") {
               if(this.haveJustOneAnd(node.id) === 1){
                 alert('Não é possivel realizar uma avaliação com apenas uma ligaçãdo do tipo AND');
                 return;
-              }else
-
+              }else if (this.allHaveStatus(node.id)){
                 if(this.allIsSatisfact(node.id)){
-                  node.satisfact = "Satisficed"                
+                  node.satisfact = "Satisficed"
                 }else {
                   node.satisfact = "Denied"
                 }
+              } else {
+                node.satisfact = '';
               }
+            }
 
           })
 
@@ -206,21 +219,21 @@ export default {
 
 <style lang="scss">
 .aside {
-    width: 250px; 
-    height: 100%;
+  width: 250px;
+  height: 100%;
 }
 .aside-left {
-    float:left; 
-    border-right: 1px solid black; 
+  float: left;
+  border-right: 1px solid black;
 }
 
 .aside-right {
-  float:right; 
-  border-left: 1px solid black; 
+  float: right;
+  border-left: 1px solid black;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
