@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <h1> SIG Soft</h1>
+    <h1>SIG Soft</h1>
 
-  <aside class="aside aside-left">
-    <toolbox @addNodeToolbox="addNode"/>
-  </aside>
+    <aside class="aside aside-left">
+      <toolbox @addNodeToolbox="addNode"/>
+    </aside>
 
+    <aside class="aside aside-right">
+      <h1>Catálogo</h1>
+    </aside>
 
-  <aside  class="aside aside-right">
-    <h1>Catálogo</h1>
-  </aside>
-    
-    <simple-flowchart :scene.sync="scene" 
+    <simple-flowchart
+      :scene.sync="scene"
       @nodeClick="nodeClick"
       @nodeDelete="nodeDelete"
       @linkBreak="linkBreak"
@@ -19,8 +19,8 @@
       @canvasClick="canvasClick"
       @callSuper="changeSatisfact"
       :height="800"
-      :arrowType="arrowType"/>
-
+      :arrowType="arrowType"
+    />
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
           {
             id: 4,
             x: -580,
-            y: -80,          
+            y: -80,
             type: 'softgoal',
             label: 'Segurança',
             priority: false,
@@ -143,25 +143,65 @@ export default {
     getChildWithArrowAnd(fatherId) {
       return this.findLinkByToId(fatherId).filter(link => link.type === 'arrow-and');
     },
-    allIsSatisfact(fatherId){
+    getChildWithArrowOr(fatherId) {
+      return this.findLinkByToId(fatherId).filter(link => link.type === 'arrow-or');
+    },
+    allIsSatisfact(fatherId, type){
       let childs = [];
-      this.getChildWithArrowAnd(fatherId).map(link => {
-        childs.push(this.findNodeById(link.from))
-        
-      });
+
+      if(type === 'and')
+        this.getChildWithArrowAnd(fatherId).map(link => {
+          childs.push(this.findNodeById(link.from))
+
+        });
+
+      if(type === 'or')
+        this.getChildWithArrowOr(fatherId).map(link => {
+          childs.push(this.findNodeById(link.from))
+
+        });
 
       let checked = childs.filter(node => node.satisfact === 'Satisficed');
       return childs.length === checked.length
     },
+    haveJustOneSatisfact(fatherId) {
+      let childs = [];
+
+      this.getChildWithArrowOr(fatherId).map(link => {
+        childs.push(this.findNodeById(link.from))
+      });
+
+      let checked = childs.filter(node => node.satisfact === 'Satisficed');
+      return checked.length > 0;
+    },
+    allHaveStatus(fatherId, type) {
+       let childs = [];
+
+      if(type === 'and')
+        this.getChildWithArrowAnd(fatherId).map(link => {
+          childs.push(this.findNodeById(link.from))
+
+        });
+
+      if(type === 'or')
+        this.getChildWithArrowOr(fatherId).map(link => {
+          childs.push(this.findNodeById(link.from))
+
+        });
+
+      let processed = childs.filter(node => node.satisfact !== '');
+
+      return (processed.length === childs.length);
+    },
     haveJustOneAnd(id) {
       let childs = this.getChildWithArrowAnd(id);
       return childs.length;
-      
+
     },
     findByIdInArray(id, array) {
       return array.filter(array.id == id);
     },
-    changeSatisfact(position){ 
+    changeSatisfact(position){
       this.scene.nodes.map(node => {
           let links = this.findLinkByToId(node.id);
           //let children = this.findNodesChildren(this.findLinkByToId(node.id));
@@ -170,30 +210,32 @@ export default {
             let child = this.findNodeById(link.from);
             
             if(link.type == "arrow-or") {
-              switch (child.satisfact){
-                case "Satisficed":
+             if (this.allHaveStatus(node.id, "or")){
+                if(this.haveJustOneSatisfact(node.id, "or")){
                   node.satisfact = "Satisficed"
-                  break;  
-
-                 case "Denied":
+                }else {
                   node.satisfact = "Denied"
-                  break;  
                 }
-               
+              } else {
+                node.satisfact = '';
+              }
+
             }
 
             if(link.type == "arrow-and") {
               if(this.haveJustOneAnd(node.id) === 1){
                 alert('Não é possivel realizar uma avaliação com apenas uma ligaçãdo do tipo AND');
                 return;
-              }else
-
-                if(this.allIsSatisfact(node.id)){
-                  node.satisfact = "Satisficed"                
+              }else if (this.allHaveStatus(node.id, "and")){
+                if(this.allIsSatisfact(node.id, "and")){
+                  node.satisfact = "Satisficed"
                 }else {
                   node.satisfact = "Denied"
                 }
+              } else {
+                node.satisfact = '';
               }
+            }
 
           
             if(link.type == "arrow-make"){
@@ -272,21 +314,21 @@ export default {
 
 <style lang="scss">
 .aside {
-    width: 250px; 
-    height: 100%;
+  width: 250px;
+  height: 100%;
 }
 .aside-left {
-    float:left; 
-    border-right: 1px solid black; 
+  float: left;
+  border-right: 1px solid black;
 }
 
 .aside-right {
-  float:right; 
-  border-left: 1px solid black; 
+  float: right;
+  border-left: 1px solid black;
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
