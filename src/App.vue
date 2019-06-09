@@ -151,9 +151,6 @@ export default {
       });
 
       let checked = childs.filter(node => node.satisfact === 'Satisficed');
-
-      console.log('child',  childs.length)
-      console.log('process', checked.length)
       return childs.length === checked.length
     },
     haveJustOneAnd(id) {
@@ -161,16 +158,19 @@ export default {
       return childs.length;
       
     },
+    findByIdInArray(id, array) {
+      return array.filter(array.id == id);
+    },
     changeSatisfact(position){ 
       this.scene.nodes.map(node => {
           let links = this.findLinkByToId(node.id);
           //let children = this.findNodesChildren(this.findLinkByToId(node.id));
 
           links.map(link => {
-            let childs = this.findNodeById(link.from);
-
+            let child = this.findNodeById(link.from);
+            
             if(link.type == "arrow-or") {
-              switch (childs.satisfact){
+              switch (child.satisfact){
                 case "Satisficed":
                   node.satisfact = "Satisficed"
                   break;  
@@ -195,6 +195,72 @@ export default {
                 }
               }
 
+          
+            if(link.type == "arrow-make"){
+              
+              if(child.satisfact != 'Weakly Denied' && child.satisfact != 'Weakly' 
+              && child.satisfact != "Denied" && child.satisfact != "Conflict" )
+                  node.satisfact = child.satisfact;
+              else
+                  node.satisfact = '';
+            }
+
+            if(link.type == "arrow-break"){              
+              let links = this.findLinkByToId(link.to);
+              
+              if(!(links.length > 1))              
+                switch(child.satisfact) {
+                  case 'Weakly Satisficed':
+                    node.satisfact = 'Weakly Denied'
+                  break;
+                  case 'Satisficed':
+                    node.satisfact = 'Denied'
+                  break;
+
+                  default:
+                    node.satisfact = ''
+                    break;
+                }
+              else {
+                let nodes = [];
+                links = links.filter(l => l.id != link.id);
+
+                links.map(l => {
+                  let scopeLink = this.findNodeById(l.from);
+                  if(link.from != scopeLink.id)
+                    nodes.push(scopeLink)
+                })
+
+                console.log(nodes, links)
+
+                
+              } 
+            }
+
+            if(link.type == 'arrow-help') {
+              switch(child.satisfact) {
+                case 'Satisficed':
+                  node.satisfact = 'Weakly Satisficed'
+                break;
+
+                default:
+                  node.satisfact = ''
+                  break;
+              } 
+            }
+
+             if(link.type == 'arrow-hurt') {
+              switch(child.satisfact) {
+                case 'Satisficed':
+                  node.satisfact = 'Weakly Denied'
+                break;
+
+                default:
+                  node.satisfact = ''
+                  break;
+              } 
+            }
+          
           })
 
 
