@@ -7,7 +7,7 @@
     </aside>
 
     <aside class="aside aside-right">
-      <h1>Catálogo</h1>
+      <catalog />
     </aside>
 
     <simple-flowchart
@@ -27,12 +27,14 @@
 <script>
 import SimpleFlowchart from './components/SimpleFlowchart.vue'
 import toolbox from './components/aside/toolbox.vue'
+import catalog from './components/aside/catalog.vue'
 
 export default {
   name: 'app',
   components: {
     SimpleFlowchart,
-    toolbox
+    toolbox,
+    catalog
   },
   data() {
     return {
@@ -172,7 +174,7 @@ export default {
       });
 
       let checked = childs.filter(node => node.satisfact === 'Satisficed');
-      return checked.length > 0;
+      return checked.length > 0
     },
     allHaveStatus(fatherId, type) {
        let childs = [];
