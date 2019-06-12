@@ -35,6 +35,10 @@ import { getMousePosition } from '../assets/utilty/position';
 export default {
   name: 'VueFlowchart',
   props: {
+    isModal: {
+      type: Boolean,
+      default: false
+    },
     arrowType: '',
     scene: {
       type: Object,
@@ -124,6 +128,8 @@ export default {
   mounted() {
     this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
     this.rootDivOffset.left = this.$el ? this.$el.offsetLeft : 0;
+
+    console.log(this.isModal);
   },
   methods: {
     changeNodeLabel(id, label) {
@@ -143,6 +149,8 @@ export default {
       }
     },
     linkingStart(index) {
+      if(this.isModal)
+        return;
       this.action.linking = true;
       this.draggingLink = {
         from: index,
@@ -174,6 +182,9 @@ export default {
       this.draggingLink = null
     },
     linkDelete(id) {
+      if(this.isModal)
+        return;
+
       const deletedLink = this.scene.links.find((item) => {
           return item.id === id;
       });
@@ -185,6 +196,8 @@ export default {
       }
     },
     nodeSelected(id, e) {
+      if(this.isModal)
+        return;
       this.action.dragging = id;
       this.action.selected = id;
       this.$emit('nodeClick', id);
@@ -235,6 +248,7 @@ export default {
       this.action.scrolling = false;
     },
     handleDown(e) {
+      
       const target = e.target || e.srcElement;
 
       // console.log('for scroll', target, e.keyCode, e.which)
@@ -247,6 +261,8 @@ export default {
       
     },
     moveSelectedNode(dx, dy) {
+      if(this.isModal)
+        return;
       let index = this.scene.nodes.findIndex((item) => {
         return item.id === this.action.dragging
       })
@@ -258,6 +274,8 @@ export default {
       }));
     },
     nodeDelete(id) {
+      if(this.isModal)
+        return;
       this.scene.nodes = this.scene.nodes.filter((node) => {
         return node.id !== id;
       })
@@ -267,6 +285,8 @@ export default {
       this.$emit('nodeDelete', id)
     },
     setNodeProperty(property) {
+      if(this.isModal)
+        return;
       let myNode = this.findNodeWithID(property.id)
       myNode[property.property] = property.value
       this.$emit("callSuper")

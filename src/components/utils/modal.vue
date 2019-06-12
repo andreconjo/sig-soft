@@ -3,6 +3,7 @@
    <div class="modal">
        <div class="content">
          <simple-flowchart
+            isModal
             :scene.sync="scene"
             :height="600"
         />
@@ -17,8 +18,9 @@ export default {
     components: {
         SimpleFlowchart
     },
-    data: ({
-    }),
+    data() {
+        return {};
+    },
     props: [
         "scene"
     ]
