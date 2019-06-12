@@ -3,7 +3,7 @@
         <h1>Catalogo</h1>
 
         <div class="">
-            <div class="" v-for="(scene, index) in scenes" :key="index">
+            <div class="" v-for="(scene, index) in scenes" :key="index" @click="goModal(scene)">
                 <div class="box">
                 <div class="desc">
                     <p> {{ scene.id }} </p>
@@ -35,7 +35,9 @@ export default {
     },
 
     methods: {
-
+        goModal(scene) {
+            this.$emit('openModal', scene)
+        }
     }
 }
 </script>

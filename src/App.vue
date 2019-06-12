@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div v-if="openModal">
+      <modal :scene="selectedScenes"/>
+    </div>
     <h1>SIG Soft</h1>
 
     <aside class="aside aside-left">
@@ -7,7 +10,7 @@
     </aside>
 
     <aside class="aside aside-right">
-      <catalog />
+      <catalog @openModal="handleModal"/>
     </aside>
 
     <simple-flowchart
@@ -28,17 +31,21 @@
 import SimpleFlowchart from './components/SimpleFlowchart.vue'
 import toolbox from './components/aside/toolbox.vue'
 import catalog from './components/aside/catalog.vue'
+import modal from './components/utils/modal.vue'
 
 export default {
   name: 'app',
   components: {
     SimpleFlowchart,
     toolbox,
-    catalog
+    catalog,
+    modal
   },
   data() {
     return {
       arrowType: '',
+      selectedScenes: {},
+      openModal: false,
       scene: {
         centerX: 1024,
         centerY: 140,
@@ -123,6 +130,10 @@ export default {
     },
     nodeClick(id) {
       //console.log('node click', id);
+    },
+    handleModal(scene) {
+      this.selectedScenes = scene;
+      this.openModal = true;
     },
     nodeDelete(id) {
       //console.log('node delete', id);
@@ -315,6 +326,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+body {
+  margin: 0px;
+}
+
 .aside {
   width: 250px;
   height: 100%;
