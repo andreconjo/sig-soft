@@ -12,6 +12,9 @@
        @mouseup="inputMouseUp">
     </div>
     
+    <button v-if="(isModal && nodeSelected)" @click="selectNode" style="position: absolute; right: 0px; top: 0px">Sim</button>
+    <button v-if="(isModal && !nodeSelected)" @click="selectNode" style="position: absolute; right: 0px; top: 0px">No</button>
+
     <div v-show="satisfact" v-bind:class="`${handleSafisfact()}`"></div>
     <div v-show="!showContext" class="node-main">
       <div v-text="type" class="node-type"></div>
@@ -22,7 +25,7 @@
     <div class="node-port node-input" 
       @mousedown="outputMouseDown">
     </div>
-    <div v-show="show.delete" class="node-delete">&times;</div>
+    <div v-show="(show.delete && !isModal)" class="node-delete">&times;</div>
     
     <div style="position: relative">
       <contextbox v-if="showContext" :satifactProp="satisfact" :topicProp="topic" :priorityProp="priority" :mouseEvent="mouseEvent" @setAttributes="setNodeAttributes"/>
@@ -88,6 +91,10 @@ export default {
           centerY: 140,
         }
       }
+    },
+    isModal: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -95,6 +102,7 @@ export default {
   }, 
   data() {
     return {
+      nodeSelected: false,
       mouseEvent: null,
       showContext: false,
       show: {
@@ -107,6 +115,7 @@ export default {
   
   mounted() {
   },
+
   computed: {
     nodeStyle() {
       return {
@@ -117,6 +126,32 @@ export default {
     }
   },
   methods: {
+
+    selectNode(){
+      if(!this.nodeSelected)
+        this.$emit('pushSelectedNode', {
+        id: this.id,
+            x: this.x,
+            y: this.y,
+            type: this.type,
+            label: this.label,
+            priority: this.priority,
+            topic: this.topic,
+            satisfact: this.satisfact
+        })
+      else
+        this.$emit('popSelectedNode', {
+        id: this.id,
+            x: this.x,
+            y: this.y,
+            type: this.type,
+            label: this.label,
+            priority: this.priority,
+            topic: this.topic,
+            satisfact: this.satisfact
+        })
+        this.nodeSelected = !this.nodeSelected;
+    },
 
     handleEnter() {
            if(this.showContext)

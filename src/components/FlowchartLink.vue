@@ -76,20 +76,21 @@ export default {
     this.myArrowType = this.type
   },
   computed: {
+    
     pathStyle() {
       let color = 'rgb(0, 0, 0)';
 
-      if(this.myArrowType === 'arrow-or')
+      if(this.type === 'arrow-or')
         color = 'rgb(255, 0, 0)'
-      else if (this.myArrowType === 'arrow-and')
+      else if (this.type === 'arrow-and')
         color = 'rgb(0, 255, 0)'
-      else if(this.myArrowType === 'arrow-make')
+      else if(this.type === 'arrow-make')
         color = 'rgb(0, 200, 0)'
-      else if(this.myArrowType === 'arrow-help')
+      else if(this.type === 'arrow-help')
         color = 'rgb(0, 150, 0)'
-      else if(this.myArrowType === 'arrow-hurt')
+      else if(this.type === 'arrow-hurt')
         color = 'rgb(150, 0, 0)'
-      else if(this.myArrowType === 'arrow-break')
+      else if(this.type === 'arrow-break')
         color = 'rgb(120, 0, 0)'
 
       return {

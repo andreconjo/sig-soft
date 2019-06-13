@@ -86,12 +86,14 @@ export default {
           {
             id: 3,
             from: 2, // node id the link start
-            to: 4, // node id the link end
+            to: 4,
+            type: 'arrow-and' // node id the link end
           },
           {
             id: 6,
             from: 6, // node id the link start
-            to: 4,  // node id the link end
+            to: 4,
+            type: 'arrow-and'  // node id the link end
           }
         ]
       },

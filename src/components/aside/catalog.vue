@@ -30,7 +30,6 @@ export default {
             .get('http://localhost:8080/')
             .then(response => { 
                 this.scenes = response.data
-                console.log(this.scenes)
                 })
     },
 

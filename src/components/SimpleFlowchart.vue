@@ -9,10 +9,11 @@
       <flowchart-link v-bind.sync="link" 
         v-for="(link, index) in lines" 
         :key="`link${index}`"
-        :type="arrowType"
+        :type="link.type"
         @deleteLink="linkDelete(link.id)">
       </flowchart-link>
     </svg>
+
     <flowchart-node v-bind.sync="node" 
       v-for="(node, index) in scene.nodes" 
       :key="`node${index}`"
@@ -22,6 +23,9 @@
       @nodeSelected="nodeSelected(node.id, $event)"
       @changeLabel="changeNodeLabel"
       @setProperty="setNodeProperty"
+      @pushSelectedNode="pushNode"
+      @popSelectedNode="popNode"
+      :isModal="isModal"
       >
     </flowchart-node>
   </div>
@@ -39,7 +43,10 @@ export default {
       type: Boolean,
       default: false
     },
-    arrowType: '',
+    arrowType: {
+      type: String,
+      default: ''
+    },
     scene: {
       type: Object,
       default() {
@@ -59,6 +66,7 @@ export default {
   },
   data() {
     return {
+      selectedNodes: [],
       action: {
         linking: false,
         dragging: false,
@@ -108,6 +116,7 @@ export default {
           start: [cx, cy], 
           end: [ex, ey],
           id: link.id,
+          type: link.type
         };
       })
       if (this.draggingLink) {
@@ -129,9 +138,17 @@ export default {
     this.rootDivOffset.top = this.$el ? this.$el.offsetTop : 0;
     this.rootDivOffset.left = this.$el ? this.$el.offsetLeft : 0;
 
-    console.log(this.isModal);
+    console.log('Minha cena: ', this.scene);
   },
   methods: {
+    pushNode(node) {
+      this.selectedNodes.push(node)
+      console.log('NODES: ', this.selectedNodes)
+    },
+    popNode(node) {
+      this.selectedNodes = this.selectedNodes.filter(nd => nd.id !== node.id);
+      console.log('NODES: ', this.selectedNodes)
+    },
     changeNodeLabel(id, label) {
       this.findNodeWithID(id).label = label;
     },
