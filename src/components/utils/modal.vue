@@ -6,7 +6,9 @@
             isModal
             :scene.sync="scene"
             :height="600"
+            @setSelectedNodes="setSelectedNodes"
         />
+       <button @click="importScene">Importar</button>
        </div>
     </div>
 </template>
@@ -19,11 +21,38 @@ export default {
         SimpleFlowchart
     },
     data() {
-        return {};
+        return {
+            nodes: [],
+            links: []
+        };
     },
     props: [
         "scene"
-    ]
+    ],
+
+    methods: {
+       setSelectedNodes(nodes) {
+           this.nodes = nodes;
+       },
+
+       importScene() {
+           this.$emit("importNodes", this.nodes);
+           this.closeModal()
+       },
+
+       closeModal() {
+           this.$emit("closeModal")
+       },
+
+        pushLink() {
+
+        },
+
+        popLink() {
+
+        }
+    }
+
 }
 </script>
 

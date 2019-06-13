@@ -1,8 +1,16 @@
 <template>
   <div id="app">
     <div v-if="openModal">
-      <modal :scene="selectedScenes"/>
+      <modal :scene="selectedScenes"
+      @importNodes="importNodes"
+      @closeModal="openModal = false"/>
     </div>
+
+    <div v-if="openSaveModal">
+      <saveModal :scene="scene"
+      @closeModal="openSaveModal = false"/>
+    </div>
+
     <h1>SIG Soft</h1>
 
     <aside class="aside aside-left">
@@ -13,6 +21,8 @@
       <catalog @openModal="handleModal"/>
     </aside>
 
+
+    <button @click="handleSaveModal">Salvars</button>
     <simple-flowchart
       :scene.sync="scene"
       @nodeClick="nodeClick"
@@ -24,6 +34,7 @@
       :height="800"
       :arrowType="arrowType"
     />
+    
   </div>
 </template>
 
@@ -32,6 +43,7 @@ import SimpleFlowchart from './components/SimpleFlowchart.vue'
 import toolbox from './components/aside/toolbox.vue'
 import catalog from './components/aside/catalog.vue'
 import modal from './components/utils/modal.vue'
+import saveModal from './components/utils/saveModal.vue'
 
 export default {
   name: 'app',
@@ -39,14 +51,17 @@ export default {
     SimpleFlowchart,
     toolbox,
     catalog,
-    modal
+    modal,
+    saveModal
   },
   data() {
     return {
       arrowType: '',
       selectedScenes: {},
       openModal: false,
+      openSaveModal: false,
       scene: {
+        alias: '',
         centerX: 1024,
         centerY: 140,
         scale: 1,
@@ -108,6 +123,14 @@ export default {
     canvasClick(e) {
       //console.log('canvas Click, event:', e)
     },
+    importNodes(nodes) {
+      nodes.map(node => {
+        node.id = Math.max(0, ...this.scene.nodes.map((link) => {
+          return link.id
+        })) + 1;
+        this.scene.nodes.push(node)
+      })
+    },
     addNode(type) {
       console.log(type)
       if(type === 'arrow-or' || type === 'arrow-and' || type === 'arrow-make'
@@ -136,6 +159,9 @@ export default {
     handleModal(scene) {
       this.selectedScenes = scene;
       this.openModal = true;
+    },
+    handleSaveModal() {
+      this.openSaveModal = true;
     },
     nodeDelete(id) {
       //console.log('node delete', id);

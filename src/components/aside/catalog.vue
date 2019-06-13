@@ -2,11 +2,11 @@
     <div>
         <h1>Catalogo</h1>
 
-        <div class="">
-            <div class="" v-for="(scene, index) in scenes" :key="index" @click="goModal(scene)">
-                <div class="box">
+        <div class="contens">
+            <div class="items" v-for="(scene, index) in scenes" :key="index" @click="goModal(scene)">
+                <div class="box catalog">
                 <div class="desc">
-                    <p> {{ scene.id }} </p>
+                    <p> {{ scene.alias }} </p>
                 </div>
                 </div>
             </div>
@@ -50,8 +50,6 @@ export default {
     .box {
         float:left;
         cursor: pointer;
-        width: 60px;
-        height: 45px;
         text-align: center;
         margin-bottom: 20px;
     }
@@ -59,4 +57,10 @@ export default {
     .box .desc {
         margin-top: -15px;
     }
+
+    .items:not(:first-child) {
+        margin-left: 80px;
+    }
+
+
 </style>

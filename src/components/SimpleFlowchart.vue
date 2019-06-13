@@ -144,10 +144,12 @@ export default {
     pushNode(node) {
       this.selectedNodes.push(node)
       console.log('NODES: ', this.selectedNodes)
+      this.$emit('setSelectedNodes', this.selectedNodes)
     },
     popNode(node) {
       this.selectedNodes = this.selectedNodes.filter(nd => nd.id !== node.id);
       console.log('NODES: ', this.selectedNodes)
+      this.$emit('setSelectedNodes', this.selectedNodes)
     },
     changeNodeLabel(id, label) {
       this.findNodeWithID(id).label = label;
