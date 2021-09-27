@@ -7,6 +7,7 @@
             :scene.sync="scene"
             :height="600"
             @setSelectedNodes="setSelectedNodes"
+            @setSelectedLinks="setSelectedLinks"
         />
        <button @click="importScene">Importar</button>
        </div>
@@ -31,12 +32,17 @@ export default {
     ],
 
     methods: {
+
+        setSelectedLinks(links) {
+            this.links = links;
+        },
+
        setSelectedNodes(nodes) {
            this.nodes = nodes;
        },
 
        importScene() {
-           this.$emit("importNodes", this.nodes);
+           this.$emit("importFromCatalog", this.nodes, this.links);
            this.closeModal()
        },
 

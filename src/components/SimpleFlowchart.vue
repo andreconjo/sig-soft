@@ -67,6 +67,7 @@ export default {
   data() {
     return {
       selectedNodes: [],
+      selectedLinks: [],
       action: {
         linking: false,
         dragging: false,
@@ -141,15 +142,26 @@ export default {
     console.log('Minha cena: ', this.scene);
   },
   methods: {
+    getParentes() {
+      this.selectedLinks = []
+      this.scene.links.map(link => {
+        if(this.selectedNodes.filter(n => n.id == link.from).length > 0 && this.selectedNodes.filter(n => n.id == link.to).length > 0){
+          this.selectedLinks.push(link);
+        }
+      })
+
+    },
     pushNode(node) {
-      this.selectedNodes.push(node)
-      console.log('NODES: ', this.selectedNodes)
+      this.selectedNodes.push(node);
+      this.getParentes();
       this.$emit('setSelectedNodes', this.selectedNodes)
+      this.$emit('setSelectedLinks', this.selectedLinks)
     },
     popNode(node) {
       this.selectedNodes = this.selectedNodes.filter(nd => nd.id !== node.id);
-      console.log('NODES: ', this.selectedNodes)
+      this.getParentes();
       this.$emit('setSelectedNodes', this.selectedNodes)
+      this.$emit('setSelectedLinks', this.selectedLinks)
     },
     changeNodeLabel(id, label) {
       this.findNodeWithID(id).label = label;

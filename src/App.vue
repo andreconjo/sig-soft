@@ -2,9 +2,11 @@
   <div id="app">
     <div v-if="openModal">
       <modal :scene="selectedScenes"
-      @importNodes="importNodes"
+      @importFromCatalog="importFromCatalog"
       @closeModal="openModal = false"/>
     </div>
+
+    <button @click="importLinks">importar ligação</button>
 
     <div v-if="openSaveModal">
       <saveModal :scene="scene"
@@ -57,6 +59,8 @@ export default {
   data() {
     return {
       arrowType: '',
+      idMap: [],
+      nLinks: [],
       selectedScenes: {},
       openModal: false,
       openSaveModal: false,
@@ -123,13 +127,40 @@ export default {
     canvasClick(e) {
       //console.log('canvas Click, event:', e)
     },
-    importNodes(nodes) {
+    importLinks() {
+
+      let links = this.nLinks;
+
+      console.log('idMap', this.idMap)
+
+      links.map(link => {
+        this.idMap.map(im => {
+          if(link.from == im.old_id)
+            link.from = im.id
+          if(link.to == im.old_id)
+          link.to = im.id - 1
+        })
+      })
+
+
+      this.scene.links.push(links)
+    },
+    importFromCatalog(nodes, links) {
+      this.nLinks = links;
       nodes.map(node => {
-        node.id = Math.max(0, ...this.scene.nodes.map((link) => {
+        let maxIdNode = Math.max(0, ...this.scene.nodes.map((link) => {
           return link.id
         })) + 1;
+
+        
+
+        this.idMap.push({old_id: node.id, id: maxIdNode})
+
+        node.id = maxIdNode;
+
         this.scene.nodes.push(node)
       })
+
     },
     addNode(type) {
       console.log(type)
