@@ -6,14 +6,12 @@
       @closeModal="openModal = false"/>
     </div>
 
-    <button @click="importLinks">importar ligação</button>
-
     <div v-if="openSaveModal">
       <saveModal :scene="scene"
       @closeModal="openSaveModal = false"/>
     </div>
 
-    <h1>SIG Soft</h1>
+    <Topbar @import="importLinks"/>
 
     <aside class="aside aside-left">
       <toolbox @addNodeToolbox="addNode"/>
@@ -24,7 +22,13 @@
     </aside>
 
 
-    <button @click="handleSaveModal">Salvars</button>
+    <div class="tool-bar">
+      <button class="save-button" @click="handleSaveModal">
+        <img class="icon" src="./assets/images/content-save.svg" alt="save">
+        Salvar
+      </button>
+    </div>
+
     <simple-flowchart
       :scene.sync="scene"
       @nodeClick="nodeClick"
@@ -36,7 +40,7 @@
       :height="800"
       :arrowType="arrowType"
     />
-    
+
   </div>
 </template>
 
@@ -46,10 +50,12 @@ import toolbox from './components/aside/toolbox.vue'
 import catalog from './components/aside/catalog.vue'
 import modal from './components/utils/modal.vue'
 import saveModal from './components/utils/saveModal.vue'
+import Topbar from "./components/topbar/topbar";
 
 export default {
   name: 'app',
   components: {
+    Topbar,
     SimpleFlowchart,
     toolbox,
     catalog,
@@ -152,7 +158,7 @@ export default {
           return link.id
         })) + 1;
 
-        
+
 
         this.idMap.push({old_id: node.id, id: maxIdNode})
 
@@ -280,7 +286,7 @@ export default {
 
           links.map(link => {
             let child = this.findNodeById(link.from);
-            
+
             if(link.type == "arrow-or") {
              if (this.allHaveStatus(node.id, "or")){
                 if(this.haveJustOneSatisfact(node.id, "or")){
@@ -309,20 +315,20 @@ export default {
               }
             }
 
-          
+
             if(link.type == "arrow-make"){
-              
-              if(child.satisfact != 'Weakly Denied' && child.satisfact != 'Weakly' 
+
+              if(child.satisfact != 'Weakly Denied' && child.satisfact != 'Weakly'
               && child.satisfact != "Denied" && child.satisfact != "Conflict" )
                   node.satisfact = child.satisfact;
               else
                   node.satisfact = '';
             }
 
-            if(link.type == "arrow-break"){              
+            if(link.type == "arrow-break"){
               let links = this.findLinkByToId(link.to);
-              
-              if(!(links.length > 1))              
+
+              if(!(links.length > 1))
                 switch(child.satisfact) {
                   case 'Weakly Satisficed':
                     node.satisfact = 'Weakly Denied'
@@ -347,8 +353,8 @@ export default {
 
                 console.log(nodes, links)
 
-                
-              } 
+
+              }
             }
 
             if(link.type == 'arrow-help') {
@@ -360,7 +366,7 @@ export default {
                 default:
                   node.satisfact = ''
                   break;
-              } 
+              }
             }
 
              if(link.type == 'arrow-hurt') {
@@ -372,9 +378,9 @@ export default {
                 default:
                   node.satisfact = ''
                   break;
-              } 
+              }
             }
-          
+
           })
 
 
@@ -387,7 +393,7 @@ export default {
 <style lang="scss">
 
 body {
-  margin: 0px;
+  margin: 0;
 }
 
 .aside {
@@ -402,6 +408,32 @@ body {
 .aside-right {
   float: right;
   border-left: 1px solid black;
+}
+
+.tool-bar {
+  padding: 10px;
+  width: calc(100% - 500px);
+  background: #ecf1f2;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+}
+
+.save-button {
+  height: 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: 10px;
+  cursor: pointer;
+  align-items: center;
+  font-weight: bold;
+}
+
+.icon {
+  height: 15px;
+  width: 15px;
+  margin: 0 5px;
 }
 
 #app {
