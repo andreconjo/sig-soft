@@ -13,7 +13,7 @@
     </div>
     
     <button v-if="(isModal && nodeSelected)" @click="selectNode" style="position: absolute; right: 0px; top: 0px">Sim</button>
-    <button v-if="(isModal && !nodeSelected)" @click="selectNode" style="position: absolute; right: 0px; top: 0px">No</button>
+    <button v-if="(isModal && !nodeSelected)" @click="selectNode" style="position: absolute; right: 0px; top: 0px">Não</button>
 
     <div v-show="satisfact" v-bind:class="`${handleSafisfact()}`"></div>
     <div v-show="!showContext" class="node-main">

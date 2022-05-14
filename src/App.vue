@@ -63,6 +63,7 @@ export default {
     saveModal
   },
   data() {
+    var det = new Date().getTime();
     return {
       arrowType: '',
       idMap: [],
@@ -76,50 +77,50 @@ export default {
         centerY: 140,
         scale: 1,
         nodes: [
+          // {
+          //   id: det + 2,
+          //   x: -770,
+          //   y: 80,
+          //   type: 'action',
+          //   label: 'Autenticação',
+          //   priority: false,
+          //   topic: '',
+          //   satisfact: ''
+          // },
           {
-            id: 2,
-            x: -770,
-            y: 80,
-            type: 'action',
-            label: 'Autenticação',
-            priority: false,
-            topic: '',
-            satisfact: ''
-          },
-          {
-            id: 4,
+            id: det + 4,
             x: -580,
             y: -80,
             type: 'softgoal',
-            label: 'Segurança',
-            priority: false,
-            topic: '',
-            satisfact: ''
-          },
-          {
-            id: 6,
-            x: -390,
-            y: 80,
-            type: 'action',
-            label: 'PIN',
+            label: 'desempenho',
             priority: false,
             topic: '',
             satisfact: ''
           }
+          // {
+          //   id: det + 6,
+          //   x: -390,
+          //   y: 80,
+          //   type: 'action',
+          //   label: 'PIN',
+          //   priority: false,
+          //   topic: '',
+          //   satisfact: ''
+          // }
         ],
         links: [
-          {
-            id: 3,
-            from: 2, // node id the link start
-            to: 4,
-            type: 'arrow-and' // node id the link end
-          },
-          {
-            id: 6,
-            from: 6, // node id the link start
-            to: 4,
-            type: 'arrow-and'  // node id the link end
-          }
+          // {
+          //   id: det + 3,
+          //   from: det + 2, // node id the link start
+          //   to: det + 4,
+          //   type: 'arrow-and' // node id the link end
+          // },
+          // {
+          //   id: det + 6,
+          //   from: det + 6, // node id the link start
+          //   to: det + 4,
+          //   type: 'arrow-and'  // node id the link end
+          // }
         ]
       },
       newNodeType: 0,
@@ -133,40 +134,37 @@ export default {
     canvasClick(e) {
       //console.log('canvas Click, event:', e)
     },
-    importLinks() {
-
-      let links = this.nLinks;
-
-      console.log('idMap', this.idMap)
-
-      links.map(link => {
-        this.idMap.map(im => {
-          if(link.from == im.old_id)
-            link.from = im.id
-          if(link.to == im.old_id)
-          link.to = im.id - 1
+    importFromCatalog(nodes, links, conflicts) {
+      this.checkConflict(conflicts).then(value => {
+        console.log('value', value)
+       if(value) {
+         console.log('importando node')
+        nodes.map(node => {
+          console.log(node)
+          this.scene.nodes.push(node)
         })
+        links.map(links => {
+          this.scene.links.push(links)
+        })
+      }
       })
-
-
-      this.scene.links.push(links)
     },
-    importFromCatalog(nodes, links) {
-      this.nLinks = links;
-      nodes.map(node => {
-        let maxIdNode = Math.max(0, ...this.scene.nodes.map((link) => {
-          return link.id
-        })) + 1;
-
-
-
-        this.idMap.push({old_id: node.id, id: maxIdNode})
-
-        node.id = maxIdNode;
-
-        this.scene.nodes.push(node)
+    checkConflict(conflicts) {
+      console.log(conflicts);
+      let importData = false;
+      let softgoals = this.scene.nodes.filter(node => node.type === 'softgoal')
+      let conf = [];
+      conflicts.map(conflict => {
+        if(softgoals.filter(sof => String(sof.label).toLowerCase() == String(conflict).toLocaleLowerCase()).length > 0)
+          conf.push(conflict)
       })
-
+      if(conf.length > 0) {
+        let message = "Conflito com o(s) softgoal(s): " + conf.map(x => x + ",") + "<br><br><b>Deseja importar?</b>";
+        return this.$vToastify.prompt({
+          body: message,
+          answers: { Sim: true, Não: false }
+        })
+      }
     },
     addNode(type) {
       console.log(type)
@@ -178,7 +176,7 @@ export default {
           return link.id
         }))
         this.scene.nodes.push({
-          id: maxID + 1,
+          id: new Date().getTime(),
           x: -1000,
           y: -100,
           // type: this.nodeCategory[this.newNodeType],
@@ -207,7 +205,7 @@ export default {
       //console.log('link break', id);
     },
     linkAdded(link) {
-      //console.log('new link added:', link);
+      console.log('new link added:', link);
     },
     findNodeById(id) {
       return this.scene.nodes.filter(node => node.id === id)[0];
@@ -386,6 +384,9 @@ export default {
 
       })
     }
+  },
+  mounted() {
+    this.$vToastify.success("Bem vindo!", "SigSoft 1.0");
   }
 }
 </script>

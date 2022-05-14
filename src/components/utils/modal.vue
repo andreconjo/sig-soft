@@ -20,11 +20,13 @@
 export default {
     components: {
         SimpleFlowchart
+
     },
     data() {
         return {
             nodes: [],
-            links: []
+            links: [],
+            conflicts: []
         };
     },
     props: [
@@ -42,7 +44,7 @@ export default {
        },
 
        importScene() {
-           this.$emit("importFromCatalog", this.nodes, this.links);
+           this.$emit("importFromCatalog", this.nodes, this.links, this.scene.conflicts);
            this.closeModal()
        },
 

@@ -201,7 +201,7 @@ export default {
             return link.id
           }))
           const newLink = {
-            id: maxID + 1,
+            id: new Date().getTime(),
             from: this.draggingLink.from,
             to: index,
             type: this.arrowType

@@ -6954,9 +6954,21 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "http://registry.npm.taobao.org/vue-template-es2015-compiler/download/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
+vue-toastify@^1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/vue-toastify/-/vue-toastify-1.8.1.tgz#0ddc57b87e17c1eef78787aed555da9d3a339f51"
+  integrity sha512-Wbmy1xweBVoA2SeiOmkbWJsObFt5ShUqmRG0Jb4Nu7sjQy2qvvBxG3+APg0IGK6bfjt2qGLK9t3ltKwOfPL0ig==
+  dependencies:
+    vue "^2.6.12"
+
 vue@^2.5.17:
   version "2.5.17"
   resolved "http://registry.npm.taobao.org/vue/download/vue-2.5.17.tgz#0f8789ad718be68ca1872629832ed533589c6ada"
+
+vue@^2.6.12:
+  version "2.6.14"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
+  integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
 
 watchpack@^1.5.0:
   version "1.6.0"

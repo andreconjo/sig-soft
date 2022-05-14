@@ -72,8 +72,7 @@ export default {
             })
         },
         satisfact() {
-            console.log('olar')
-                this.changeProperties('satisfact', this.satisfact)
+            this.changeProperties('satisfact', this.satisfact)
         },
         priority() {
             this.changeProperties('priority', this.priority)
