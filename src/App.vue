@@ -87,16 +87,16 @@ export default {
           //   topic: '',
           //   satisfact: ''
           // },
-          {
-            id: det + 4,
-            x: -580,
-            y: -80,
-            type: 'softgoal',
-            label: 'desempenho',
-            priority: false,
-            topic: '',
-            satisfact: ''
-          }
+          // {
+          //   id: det + 4,
+          //   x: -580,
+          //   y: -80,
+          //   type: 'softgoal',
+          //   label: 'desempenho',
+          //   priority: false,
+          //   topic: '',
+          //   satisfact: ''
+          // }
           // {
           //   id: det + 6,
           //   x: -390,
@@ -165,6 +165,10 @@ export default {
           answers: { Sim: true, Não: false }
         })
       }
+
+      return new Promise((resolve, reject) => {
+        resolve(true)
+      })
     },
     addNode(type) {
       console.log(type)
